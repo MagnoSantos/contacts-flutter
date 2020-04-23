@@ -1,3 +1,6 @@
+import 'package:contacts/android/models/model-contacts.dart';
+import 'package:contacts/android/views/adresscontact.view.dart';
+import 'package:contacts/android/views/editor.contacts.view.dart';
 import 'package:flutter/material.dart';
 
 class DetailsView extends StatelessWidget {
@@ -130,7 +133,14 @@ class DetailsView extends StatelessWidget {
             //É três linhas no caso do subtítulo
             isThreeLine: true,
             trailing: FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdressContactView(),
+                  ),
+                );
+              },
               child: Icon(
                 Icons.pin_drop,
                 color: Theme.of(context).primaryColor,
@@ -140,7 +150,20 @@ class DetailsView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditorContactView(
+                contactsModel: ContactsModel(
+                    id: "1",
+                    name: "Luiz Otávio",
+                    email: "lluiz.omg@gmail.com",
+                    telefone: "55319906-5776"),
+              ),
+            ),
+          );
+        },
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(
           Icons.edit,

@@ -1,9 +1,11 @@
 import 'package:contacts/android/views/details.view.dart';
+import 'package:contacts/android/views/editor.contacts.view.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //Geralmente scaffold tem um appbar, body, floating button
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -58,7 +60,14 @@ class HomeView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditorContactView(),
+            ),
+          );
+        },
         child: Icon(
           Icons.add,
           color: Theme.of(context).accentColor,
