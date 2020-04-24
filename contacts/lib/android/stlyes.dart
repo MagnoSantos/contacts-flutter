@@ -48,6 +48,8 @@ ThemeData androidTheme() {
         fontFamily: "Poppins",
       ),
     ),
+    //Várias cores
+    primarySwatch: Colors.blue,
     primaryColor: corPrimaria,
     accentColor: corAcentuada,
   );

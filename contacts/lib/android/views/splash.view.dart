@@ -1,3 +1,4 @@
+import 'package:contacts/android/views/home.view.dart';
 import 'package:flutter/material.dart';
 
 class SplashView extends StatelessWidget {
@@ -35,8 +36,19 @@ class SplashView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Text("OK"),
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeView(),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.input,
+          color: Theme.of(context).accentColor,
+        ),
       ),
     );
   }
