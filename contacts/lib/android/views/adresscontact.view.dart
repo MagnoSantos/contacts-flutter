@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AdressContactView extends StatelessWidget {
   @override
@@ -49,8 +50,12 @@ class AdressContactView extends StatelessWidget {
             height: 60,
             //Alterar padding apenas na horizontal ou vertical, utilizar essa opção
             child: Padding(
+              /*var texto = TextEditController(); - controller para obter informações, vincular ao controller do 
+              TextFormField*/
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TextFormField(
+                //Input de texto, emailadress, phone (numeric)
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   labelText: "Pesquisar",
                 ),
