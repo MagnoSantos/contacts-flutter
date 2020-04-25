@@ -1,23 +1,21 @@
-import 'package:contacts/android/models/model-contacts.dart';
+import 'package:contacts/android/models/itens-todo.dart';
 import 'package:flutter/material.dart';
 
 class TodoList extends StatefulWidget {
-  var contatos = new List<ContactsModel>();
+  var itens = new List<Item>();
 
   TodoList() {
-    contatos = [];
-    contatos.add(ContactsModel(
-      id: "1",
-      name: "Magno",
-      email: "magno.ufvjm@gmail.com",
-      telefone: "5531999065776",
-    ));
-    contatos.add(ContactsModel(
-      id: "2",
-      name: "Luiz",
-      email: "lluiz.omg@gmail.com",
-      telefone: "5531999065776",
-    ));
+    itens = [];
+
+    itens.add(
+      Item(titulo: "Começar a estudar flutter", feito: true),
+    );
+    itens.add(
+      Item(titulo: "Começar a estudar react", feito: false),
+    );
+    itens.add(
+      Item(titulo: "Começar a pós-graduação", feito: false),
+    );
   }
 
   @override
@@ -25,15 +23,25 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  //Estrutura para obter valor digitado em um textformfield
-  var textoObtido = TextEditingController();
+  var textController = TextEditingController();
 
-  void Adicionar() {
+  Future<void> AdicionarItem() async {
+    if (textController.text == null || textController.text.isEmpty) return;
+
     setState(() {
-      widget.contatos.add(
-        ContactsModel(name: textoObtido.text),
+      widget.itens.add(
+        Item(
+          titulo: textController.text,
+          feito: false,
+        ),
       );
-      textoObtido.clear();
+      textController.clear();
+    });
+  }
+
+  Future<void> RemoverItem(int index) async {
+    setState(() {
+      widget.itens.removeAt(index);
     });
   }
 
@@ -43,7 +51,17 @@ class _TodoListState extends State<TodoList> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: Text("Contact List"),
+        title: TextFormField(
+          //text, phone or adressemail
+          keyboardType: TextInputType.text,
+          controller: textController,
+          style: TextStyle(
+            fontSize: 18,
+          ),
+          decoration: InputDecoration(
+            labelText: "Adicionar nova tarefa",
+          ),
+        ),
         elevation: 0,
         leading: Icon(
           Icons.insert_emoticon,
@@ -54,38 +72,38 @@ class _TodoListState extends State<TodoList> {
       //Itens que forem do pai acessar com widget.
       //Redenrização dos itens na tela item builder
       body: ListView.builder(
-        itemCount: widget.contatos.length,
-        itemBuilder: (BuildContext context, int index) {
-          final contato = widget.contatos[index];
-          return ListTile(
-            title: Text(
-              contato.name,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
+        itemCount: widget.itens.length,
+        itemBuilder: (context, int index) {
+          final item = widget.itens[index];
+          return Dismissible(
+            background: Container(
+              color: Colors.blue.withOpacity(0.1),
             ),
-            subtitle: Column(
-              //Itens para o começo da coluna
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  contato.email,
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
-                Text(
-                  contato.telefone,
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+            onDismissed: (direcao) {
+              RemoverItem(index);
+            },
+            key: Key(item.titulo),
+            child: CheckboxListTile(
+              activeColor: Theme.of(context).primaryColor,
+              title: Text(item.titulo),
+              value: item.feito,
+              onChanged: (valor) {
+                //Alterar status
+                setState(() {
+                  item.feito = valor;
+                });
+              },
             ),
           );
-          //Caso os dados de uma lista sejam atualizados, utilizar o setState(() {})
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        onPressed: AdicionarItem,
+        child: Icon(
+          Icons.add,
+          color: Theme.of(context).accentColor,
+        ),
       ),
     );
   }
