@@ -1,21 +1,13 @@
+import 'dart:convert';
 import 'package:contacts/android/models/itens-todo.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoList extends StatefulWidget {
   var itens = new List<Item>();
 
   TodoList() {
     itens = [];
-
-    itens.add(
-      Item(titulo: "Começar a estudar flutter", feito: true),
-    );
-    itens.add(
-      Item(titulo: "Começar a estudar react", feito: false),
-    );
-    itens.add(
-      Item(titulo: "Começar a pós-graduação", feito: false),
-    );
   }
 
   @override
@@ -25,7 +17,7 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   var textController = TextEditingController();
 
-  Future<void> AdicionarItem() async {
+  Future<void> adicionarItem() async {
     if (textController.text == null || textController.text.isEmpty) return;
 
     setState(() {
@@ -36,13 +28,39 @@ class _TodoListState extends State<TodoList> {
         ),
       );
       textController.clear();
+      salvarDados();
     });
   }
 
-  Future<void> RemoverItem(int index) async {
+  Future<void> removerItem(int index) async {
     setState(() {
       widget.itens.removeAt(index);
+      salvarDados();
     });
+  }
+
+  //Tratativa para shared preferences para salvar os dados
+  salvarDados() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setString('data', jsonEncode(widget.itens));
+  }
+
+  //Tratativa para shared preferences para ler os dados
+  Future leituraDados() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    var data = sharedPreferences.getString('data');
+
+    if (data != null) {
+      var jsonDecodificado = jsonDecode(data);
+      var listaItens = jsonDecodificado.map((x) => Item.fromJson(x)).toList();
+      setState(() {
+        widget.itens = listaItens;
+      });
+    }
+  }
+
+  _TodoListState() {
+    leituraDados();
   }
 
   @override
@@ -80,7 +98,7 @@ class _TodoListState extends State<TodoList> {
               color: Colors.blue.withOpacity(0.1),
             ),
             onDismissed: (direcao) {
-              RemoverItem(index);
+              removerItem(index);
             },
             key: Key(item.titulo),
             child: CheckboxListTile(
@@ -91,6 +109,7 @@ class _TodoListState extends State<TodoList> {
                 //Alterar status
                 setState(() {
                   item.feito = valor;
+                  salvarDados();
                 });
               },
             ),
@@ -99,7 +118,7 @@ class _TodoListState extends State<TodoList> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
-        onPressed: AdicionarItem,
+        onPressed: adicionarItem,
         child: Icon(
           Icons.add,
           color: Theme.of(context).accentColor,

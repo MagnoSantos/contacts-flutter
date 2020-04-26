@@ -12,11 +12,11 @@ class Item {
   }
 
   Map<String, dynamic> toJson() {
-    var dados = new Map<String, dynamic>();
-    dados['id'] = this.id;
-    dados['titulo'] = this.titulo;
-    dados['feito'] = this.feito;
+    var data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['titulo'] = this.titulo;
+    data['feito'] = this.feito;
 
-    return dados;
+    return data;
   }
 }
